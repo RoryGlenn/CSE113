@@ -148,21 +148,29 @@ def homework_loop_interleaved_source(chain_length, unroll_factor):
 
     open_brace  = "{"
     close_brace = "}"
-
-    unroll_str = "reference_loop(b, i);\n"
+    count       = 0
+    flag        = False
+    unroll_str  = f"reference_loop(b,   i+{count});\n"
+    
     for i in range(1, unroll_factor):
         if i % 2 == 0:
-            unroll_str += "        reference_loop(b, i);\n"
+            unroll_str += f"            reference_loop(b,   i+{count});\n"
+            flag = False
         else:
-            unroll_str += "        reference_loop(b, i+1);\n"
+            unroll_str += f"            reference_loop(b+1, i+{count});\n"
+            flag = True
+        
+        if flag:
+            count+=1
+
 
     function_body = f"""
-    int unroll_factor = {unroll_factor};
+        int unroll_factor = {unroll_factor};
 
-    for (int i = 0; i < size; i += unroll_factor)
-    {open_brace}
-        {unroll_str}
-    {close_brace}"""    
+        for (int i = 0; i < size; i += unroll_factor)
+        {open_brace}
+            {unroll_str}
+        {close_brace}"""    
 
 
     # function_body = "  reference_loop(b, size);"
