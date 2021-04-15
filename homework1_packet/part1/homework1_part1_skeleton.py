@@ -34,7 +34,8 @@ def reference_loop_source(chain_length):
         chain.append("    tmp += "+ str(i+1)+".0f;")
 
     # store the final value to memory
-    close = "    b[i] = tmp;"
+    close = '    b[i] = tmp;'
+
 
     # close the loop
     loop_close = "  }"

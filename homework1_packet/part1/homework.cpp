@@ -11,50 +11,25 @@ void reference_loop(float *b, int size) {
     float tmp = b[i];
     tmp += 1.0f;
     tmp += 2.0f;
-    tmp += 3.0f;
-    tmp += 4.0f;
-    tmp += 5.0f;
-    tmp += 6.0f;
-    tmp += 7.0f;
-    tmp += 8.0f;
     b[i] = tmp;
   }
 }
 void homework_loop_sequential(float *b, int size) {
 
-    int unroll_factor = 8;
+    int unroll_factor = 2;
 
     for (int i = 0; i < size; i += unroll_factor)
     {
-        reference_loop(b, i);
-        reference_loop(b, i+1);
-        reference_loop(b, i+2);
-        reference_loop(b, i+3);
-        reference_loop(b, i+4);
-        reference_loop(b, i+5);
-        reference_loop(b, i+6);
-        reference_loop(b, i+7);
+      float tmp = b[i];
+      tmp += 1.0f;
+      tmp += 2.0f;
+      b[i] = tmp;
+      
 
     }
 }
 
-void homework_loop_interleaved(float *b, int size) {
 
-        int unroll_factor = 8;
-
-        for (int i = 0; i < size; i += unroll_factor)
-        {
-            reference_loop(b,   i+0);
-            reference_loop(b+1, i+0);
-            reference_loop(b,   i+1);
-            reference_loop(b+1, i+1);
-            reference_loop(b,   i+2);
-            reference_loop(b+1, i+2);
-            reference_loop(b,   i+3);
-            reference_loop(b+1, i+3);
-
-        }
-}
 
 #define SIZE 1024 * 1024 * 8
 
