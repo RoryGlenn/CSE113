@@ -13,7 +13,6 @@ top_source_string = """
 #include <chrono>
 using namespace std;
 using namespace std::chrono;
-
 """
 
 # The reference function creates a loop that simply adds together all floating point constants in a loop
@@ -34,8 +33,7 @@ def reference_loop_source(chain_length):
         chain.append("    tmp += "+ str(i+1)+".0f;")
 
     # store the final value to memory
-    close = '    b[i] = tmp;'
-
+    close = "    b[i] = tmp;"
 
     # close the loop
     loop_close = "  }"
@@ -80,34 +78,37 @@ def homework_loop_sequential_source(chain_length, unroll_factor):
 
     function = "void homework_loop_sequential(float *b, int size) {"
 
-    # # # create the dependency chain
-    # for i in range(0, chain_length):
-    #     chain.append("    tmp += "+ str(i+1)+".0f;")
+    # CL = chain length  ( how many dependent instructions we will do per loop)
+    # UF = unroll factor (number of time we call the default loop function per iteration)
 
-    # CL = chain length
-    # UF = unroll factor
-
-    # You can specify various chain lengths to see how the reference loop changes. 
-    # The unroll factor currently does nothing because that is your job to implement.
-
-    #implement me!
-    open_brace = "{"
+    open_brace  = "{"
     close_brace = "}"
 
-    unroll_str = "reference_loop(b, i);\n"
-    count = 1
-    for i in range(1, unroll_factor):
-        # unroll_str += f"        reference_loop(b+" + str(i) + ", i"
-        unroll_str += "        reference_loop(b, i"
-        unroll_str += f"+{count});\n"
-        count += 1
+    function_body_str = "float tmp0 = b[i];\n"
+
+    # generate the unrolled instructions (aka unroll factor)
+    for i in range(0, unroll_factor):
+        
+        if i > 0:
+            function_body_str += f"        float tmp{i} = b[i+{i}];\n"
+
+        # generate the dependent instructions (aka chain length)
+        for j in range(1, chain_length+1):
+            function_body_str += f"        tmp{i} += {j}.0f;\n"   
+            if j == chain_length:
+                if i > 0:
+                    function_body_str += f"        b[i+{i}] = tmp{i};\n\n"
+                else:
+                    function_body_str += f"        b[i] = tmp0;\n\n"
+            
+
 
     function_body = f"""
     int unroll_factor = {unroll_factor};
 
     for (int i = 0; i < size; i += unroll_factor)
     {open_brace}
-        {unroll_str}
+        {function_body_str}
     {close_brace}"""
 
     function_close = "}\n"
@@ -132,50 +133,41 @@ def homework_loop_sequential_source(chain_length, unroll_factor):
 def homework_loop_interleaved_source(chain_length, unroll_factor):
     function = "void homework_loop_interleaved(float *b, int size) {"
     
-
-    # int unroll_factor = 2;
-
-    # for (int i = 0; i < size; i += unroll_factor)
-    # {
-    #     reference_loop(b,   i);
-    #     reference_loop(b+1, i);
-    #     reference_loop(b,   i+1);
-    #     reference_loop(b+1, i+1);
-    #     ...
-    #     reference_loop(b,   i+j);
-    #     reference_loop(b+1, i+j);
-
-    # }
+    # CL = chain length  ( how many dependent instructions we will do per loop)
+    # UF = unroll factor (number of time we call the default loop function per iteration)
 
     open_brace  = "{"
     close_brace = "}"
-    count       = 0
-    flag        = False
-    unroll_str  = f"reference_loop(b,   i+{count});\n"
-    
+
+    function_body_str = "float tmp0 = b[i];\n"
+
+    # generate the unrolled instructions (aka unroll factor)
     for i in range(1, unroll_factor):
-        if i % 2 == 0:
-            unroll_str += f"            reference_loop(b,   i+{count});\n"
-            flag = False
-        else:
-            unroll_str += f"            reference_loop(b+1, i+{count});\n"
-            flag = True
-        
-        if flag:
-            count+=1
+        function_body_str += f"        float tmp{i} = b[i+{i}];\n"
+
+    function_body_str += "\n"
+
+    # generate interleaved instructions
+    for i in range(1, chain_length+1):
+        for j in range(0, unroll_factor):
+            function_body_str += f"        tmp{j} += {i}.0f;\n"
+        function_body_str += "\n"
+
+    function_body_str += "        b[i]   = tmp0;\n"
+
+    for k in range(1, unroll_factor):
+        function_body_str += f"        b[i+{k}] = tmp{k};\n"
 
 
     function_body = f"""
-        int unroll_factor = {unroll_factor};
+    int unroll_factor = {unroll_factor};
 
-        for (int i = 0; i < size; i += unroll_factor)
-        {open_brace}
-            {unroll_str}
-        {close_brace}"""    
+    for (int i = 0; i < size; i += unroll_factor)
+    {open_brace}
+        {function_body_str}
+    {close_brace}"""
 
-
-    # function_body = "  reference_loop(b, size);"
-    function_close = "}"
+    function_close = "}\n"
     return "\n".join([function, function_body, function_close])
 
 
@@ -235,7 +227,7 @@ int main() {
 def pp_program(chain_length, unroll_factor):
 
     # Your two functions are called here
-    homework_source_string_sequential = homework_loop_sequential_source(chain_length, unroll_factor)
+    homework_source_string_sequential  = homework_loop_sequential_source(chain_length, unroll_factor)
     homework_source_string_interleaved = homework_loop_interleaved_source(chain_length, unroll_factor)
 
     # join together all the other parts to make a complete C++ program

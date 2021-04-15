@@ -5,30 +5,92 @@
 using namespace std;
 using namespace std::chrono;
 
-
 void reference_loop(float *b, int size) {
   for (int i = 0; i < size; i++) {
     float tmp = b[i];
     tmp += 1.0f;
     tmp += 2.0f;
+    tmp += 3.0f;
+    tmp += 4.0f;
     b[i] = tmp;
   }
 }
 void homework_loop_sequential(float *b, int size) {
 
-    int unroll_factor = 2;
+    int unroll_factor = 4;
 
     for (int i = 0; i < size; i += unroll_factor)
     {
-      float tmp = b[i];
-      tmp += 1.0f;
-      tmp += 2.0f;
-      b[i] = tmp;
-      
+        float tmp0 = b[i];
+        tmp0 += 1.0f;
+        tmp0 += 2.0f;
+        tmp0 += 3.0f;
+        tmp0 += 4.0f;
+        b[i] = tmp0;
+
+        float tmp1 = b[i+1];
+        tmp1 += 1.0f;
+        tmp1 += 2.0f;
+        tmp1 += 3.0f;
+        tmp1 += 4.0f;
+        b[i+1] = tmp1;
+
+        float tmp2 = b[i+2];
+        tmp2 += 1.0f;
+        tmp2 += 2.0f;
+        tmp2 += 3.0f;
+        tmp2 += 4.0f;
+        b[i+2] = tmp2;
+
+        float tmp3 = b[i+3];
+        tmp3 += 1.0f;
+        tmp3 += 2.0f;
+        tmp3 += 3.0f;
+        tmp3 += 4.0f;
+        b[i+3] = tmp3;
+
 
     }
 }
 
+void homework_loop_interleaved(float *b, int size) {
+
+    int unroll_factor = 4;
+
+    for (int i = 0; i < size; i += unroll_factor)
+    {
+        float tmp0 = b[i];
+        float tmp1 = b[i+1];
+        float tmp2 = b[i+2];
+        float tmp3 = b[i+3];
+
+        tmp0 += 1.0f;
+        tmp1 += 1.0f;
+        tmp2 += 1.0f;
+        tmp3 += 1.0f;
+
+        tmp0 += 2.0f;
+        tmp1 += 2.0f;
+        tmp2 += 2.0f;
+        tmp3 += 2.0f;
+
+        tmp0 += 3.0f;
+        tmp1 += 3.0f;
+        tmp2 += 3.0f;
+        tmp3 += 3.0f;
+
+        tmp0 += 4.0f;
+        tmp1 += 4.0f;
+        tmp2 += 4.0f;
+        tmp3 += 4.0f;
+
+        b[i]   = tmp0;
+        b[i+1] = tmp1;
+        b[i+2] = tmp2;
+        b[i+3] = tmp3;
+
+    }
+}
 
 
 #define SIZE 1024 * 1024 * 8

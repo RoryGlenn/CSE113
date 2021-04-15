@@ -13,6 +13,14 @@ typedef double reduce_type;
 
 """
 
+
+
+# docker pull reeselevine/cse113:latest
+# docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
+# python3 homework1_part2_skeleton.py 4
+
+
+
 # The reference loop simply adds together all elements in the array
 def reference_reduction_source():
 
@@ -31,6 +39,7 @@ def reference_reduction_source():
 
     # joining together all parts
     return "\n".join([function, loop, eq, loop_close, function_close])
+
 
 # Your homework will largely take place here. Create a loop that
 # is semantically equivalent to the reference loop. That is, it computes
@@ -58,10 +67,21 @@ def reference_reduction_source():
 # power-of-two. You can assume partition is less than size.
 def homework_reduction_source(partitions):
     # header
-    function = "void homework_reduction(reduce_type *a, int size) {"
+    function = "\nvoid homework_reduction(reduce_type *a, int size) \n{"
     
+    # g++ and clang are not smart enough to do this in their compiler
+
     # implement me!
-    function_body = ""
+    open_brace  = "{"
+    close_brace = "}"
+
+    function_body = f"""    int partitions = {partitions};
+    for (int i = 1; i < size/partitions; i++)
+    {open_brace}
+        a[0] += a[i];
+        a[size/partitions] += a[(size/partitions)+i];
+    {close_brace}\n
+    a[0] = a[0] + a[size/partitions];"""
 
     # closing brace
     function_close = "}"
