@@ -154,19 +154,26 @@ int main()
     double b_time = function_b(b);
     double c_time = function_c(c);
 
-    cout << "a seconds: " << a_time << endl;
-    cout << "b seconds: " << b_time << endl;
-    cout << "c seconds: " << c_time << endl;
-
     for (int i = 0; i < SIZE; i++)
     {
         assert(a[i] == b[i]);
         assert(a[i] == c[i]);
     }
 
+    cout << endl;
+    cout << "a time in seconds: " << a_time << endl;
+    cout << "b time in seconds: " << b_time << endl;
+    cout << "c time in seconds: " << c_time << endl;
+
+    cout << endl;
+    cout << "a compared to b: " << a_time/b_time << endl;
+    cout << "a compared to c: " << a_time/c_time << endl;
+    cout << "b compared to c: " << b_time/c_time << endl;
+    cout << endl;
+
     delete[] a;
     delete[] b;
     delete[] c;
-    
+
     return 0;
 }
