@@ -48,6 +48,8 @@ void homework_loop_sequential(float *b, int size) {
         tmp3 += 3.0f;
         tmp3 += 4.0f;
         b[i+3] = tmp3;
+
+
     }
 }
 

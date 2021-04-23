@@ -16,6 +16,7 @@ using namespace std::chrono;
 // make
 
 
+
 // 1.For array a, you must do this computation sequentially.
 void compute_a(volatile int* a)
 {
@@ -38,7 +39,6 @@ double function_a(volatile int* a)
     double function_a_seconds   = function_a_duration.count() / 1000000000.0;
     return function_a_seconds;
 }
-
 
 
 // For array b, you must do this computation in parallel by writing an SMPD style function.
@@ -71,7 +71,7 @@ double function_b(volatile int* b)
     // create threads
     for (int i = 0; i < THREADS; i++)
     {
-        thread_ar[i] = thread(compute_b, b, i, THREADS);  
+        thread_ar[i] = thread(compute_b, b, i, THREADS);
     }
     
     // join threads
@@ -91,15 +91,18 @@ void compute_c(volatile int* c, int tid, int num_threads)
 {
     for (int i = tid; i < SIZE; i+=num_threads)
     {
-        for (int j = 0; j < K; j++)
+        for (int j = 0; j < K; j+=4)
         {
+            c[i]++;
+            c[i]++;
+            c[i]++;
             c[i]++;
         }
     }
 }
 
 
-//For array c, you must do this computation in parallel by writing an SMPD style loop, 
+// For array c, you must do this computation in parallel by writing an SMPD style loop, 
 // however you can partition data to the threads in any way you’d like.
 // Think about how you can do this in a more eﬀicient way than what is done for array b.
 double function_c(volatile int* c)
@@ -123,7 +126,7 @@ double function_c(volatile int* c)
     auto   function_c_stop     = high_resolution_clock::now();
     auto   function_c_duration = duration_cast<nanoseconds>(function_c_stop - function_c_start);
     double function_c_seconds  = function_c_duration.count() / 1000000000.0;  
-    return function_c_seconds;    
+    return function_c_seconds;
 }
 
 
@@ -133,7 +136,6 @@ int main()
     volatile int* a = new int[SIZE];
     volatile int* b = new int[SIZE];
     volatile int* c = new int[SIZE];
-    thread thread_ar[THREADS];
 
     // initialize all array indices to 0
     for (int i = 0; i < SIZE; i++)
@@ -159,11 +161,6 @@ int main()
         assert(a[i] == b[i]);
         assert(a[i] == c[i]);
     }
-
-    cout << endl;
-    cout << "a time in seconds: " << a_time << endl;
-    cout << "b time in seconds: " << b_time << endl;
-    cout << "c time in seconds: " << c_time << endl;
 
     cout << endl;
     cout << "a compared to b: " << a_time/b_time << endl;
