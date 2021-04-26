@@ -1,21 +1,33 @@
 #pragma once
 
+// docker pull reeselevine/cse113:latest
+// docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
+
+
 #include <atomic>
 using namespace std;
 
 class mutex
 {
+
 public:
+
   mutex()
   {
 
+  }
+
+  ~mutex()
+  {
+    delete[] this->label;
+    delete[] this->flag;
   }
 
   int find_largest(int* array)
   {
     int largest = array[0];
 
-    for (int i = 1; i < array.length; i++)
+    for (int i = 1; i < this->number_threads; i++)
     {
       if (largest < array[i])
       {
@@ -68,9 +80,12 @@ public:
     this->flag[thread_id] = false;
   }
 
+
 private:
+
   // Give me some private variables!
   bool *flag;
-  int *label;
-  int number_threads;
+  int  *label;
+  int   number_threads;
+
 };

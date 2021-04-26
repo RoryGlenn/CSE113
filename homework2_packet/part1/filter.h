@@ -1,16 +1,23 @@
 #pragma once
 
+// docker pull reeselevine/cse113:latest
+// docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
+
 #include <atomic>
 using namespace std;
 
 class mutex
 {
+
 public:
+
   mutex()
   {
     // Implement me!
-    this->level  = new int[num_threads];
-    this->victim = new int[num_threads];    
+    // this->level  = new int[num_threads];
+    // this->victim = new int[num_threads]; 
+
+    this->number_threads = 0;
   }
 
   ~mutex()
@@ -21,13 +28,16 @@ public:
 
   void init(int num_threads)
   {
-    // // Implement me!
+    // Implement me!
+    this->level  = new int[num_threads];
+    this->victim = new int[num_threads];   
     this->number_threads = num_threads;
 
     for (int i = 0; i < num_threads; i++)
     {
       this->level[i] = 0;
     }
+
   }
 
   void lock(int thread_id)
