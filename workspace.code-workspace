@@ -9,7 +9,9 @@
 			"xlocale": "cpp",
 			"chrono": "cpp",
 			"limits": "cpp",
-			"ios": "cpp"
+			"ios": "cpp",
+			"mutex": "cpp",
+			"shared_mutex": "cpp"
 		}
 	}
 }

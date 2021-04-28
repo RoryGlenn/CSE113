@@ -3,11 +3,9 @@
 // make
 
 // Implement 2 mutex variants.
-  // 1. filter lock - an N threaded generalization of Peterson's algorithm. This is in section 2.4 of the book.
-  // 2. Lamport's bakery algorithm. It is given in section 2.6
+// 1. filter lock - an N threaded generalization of Peterson's algorithm. This is in section 2.4 of the book.
+// 2. Lamport's bakery algorithm. It is given in section 2.6
 // You will measure the throughput and fairness of each mutex using the skeleton C++ code provided in the packet
-
-
 
 #include <iostream>
 #include <thread>

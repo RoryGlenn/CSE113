@@ -3,6 +3,9 @@
 // docker pull reeselevine/cse113:latest
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
+// what is the built in lock in C++?
+
+
 
 #include <atomic>
 using namespace std;
@@ -14,7 +17,7 @@ public:
 
   mutex()
   {
-
+    
   }
 
   ~mutex()
@@ -46,7 +49,7 @@ public:
     this->number_threads = num_threads;
 
     for (int i = 0; i < num_threads; i++)
-    {
+      {
       this->flag[i]  = false;
       this->label[i] = 0;
     }
