@@ -4,11 +4,11 @@
 #include <mutex>
 using namespace std;
 
+
 class rw_mutex
 {
 
 public:
-
   rw_mutex()
   {
     writer = false;

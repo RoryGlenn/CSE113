@@ -11,7 +11,9 @@
 			"limits": "cpp",
 			"ios": "cpp",
 			"mutex": "cpp",
-			"shared_mutex": "cpp"
+			"shared_mutex": "cpp",
+			"thread": "cpp",
+			"xtr1common": "cpp"
 		}
 	}
 }

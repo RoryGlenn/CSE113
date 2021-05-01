@@ -11,13 +11,21 @@ public:
   rw_mutex()
   {
     // Implement me!
-    this->num_readers = 0;
-    this->writer = false;
+    writer = false;
+    num_readers = 0;
+    num_writers_waiting = 0;
   }
 
   void lock_reader()
   {
     // Implement me!
+
+    // if there is a writer waiting, we should yield
+    while (num_writers_waiting > 0)
+    {
+      this_thread::yield();
+    }
+
     bool acquired = false;
 
     while (!acquired)
@@ -26,12 +34,13 @@ public:
 
       if (!writer)
       {
-        acquired = true;
         num_readers++;
+        acquired = true;
       }
-
+      
       internal_mutex.unlock();
     }
+  
   }
 
   void unlock_reader()
@@ -45,29 +54,30 @@ public:
   void lock()
   {
     // Implement me!
-
-    // this lock is for writers
+    num_writers_waiting++;
     bool acquired = false;
-
+    
     while (!acquired)
     {
       internal_mutex.lock();
-
+    
       if (!writer && num_readers == 0)
       {
+        writer   = true;
         acquired = true;
-        writer = true;
       }
-
+    
       internal_mutex.unlock();
+      
     }
+    
+    num_writers_waiting--;
+
   }
 
   void unlock()
   {
     // Implement me!
-
-    // for writers only
     internal_mutex.lock();
     writer = false;
     internal_mutex.unlock();
@@ -75,7 +85,8 @@ public:
 
 private:
   // Give me some private variables!
-  mutex internal_mutex;
-  int num_readers;
   bool writer;
+  int num_readers;
+  int num_writers_waiting;
+  mutex internal_mutex;
 };
