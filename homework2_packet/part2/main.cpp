@@ -34,8 +34,9 @@ atomic_int total_writers(0);
 // and over
 void reader()
 {
-  auto start = high_resolution_clock::now();
+  auto start   = high_resolution_clock::now();
   int duration = 0.0;
+  
   while (duration < SECONDS)
   {
     atomic_fetch_add(&total_readers, 1);
@@ -56,6 +57,7 @@ void writer()
 {
   auto start = high_resolution_clock::now();
   int duration = 0.0;
+  
   while (duration < SECONDS)
   {
     atomic_fetch_add(&total_writers, 1);

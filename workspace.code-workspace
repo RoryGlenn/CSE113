@@ -13,7 +13,31 @@
 			"mutex": "cpp",
 			"shared_mutex": "cpp",
 			"thread": "cpp",
-			"xtr1common": "cpp"
+			"xtr1common": "cpp",
+			"atomic": "cpp"
 		}
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+		{
+			"name": "Attach to Chrome",
+			"port": 9222,
+			"request": "attach",
+			"type": "pwa-chrome",
+			"webRoot": "${workspaceFolder}"
+		},
+			{
+				"name": "(Windows) Launch",
+				"type": "cppvsdbg",
+				"request": "launch",
+				"program": "enter program name, for example ${workspaceFolder}/a.exe",
+				"args": [],
+				"stopAtEntry": false,
+				"cwd": "${workspaceFolder}",
+				"environment": [],
+				"console": "externalTerminal"
+			}
+		]
 	}
 }

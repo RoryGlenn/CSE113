@@ -1,8 +1,10 @@
-#pragma once
+// docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
+#pragma once
 #include <atomic>
 #include <mutex>
 using namespace std;
+
 
 class rw_mutex
 {
@@ -11,8 +13,8 @@ public:
   rw_mutex()
   {
     // Implement me!
-    writer = false;
-    num_readers = 0;
+    writer              = false;
+    num_readers         = 0;
     num_writers_waiting = 0;
   }
 
@@ -85,8 +87,9 @@ public:
 
 private:
   // Give me some private variables!
-  bool writer;
   int num_readers;
   int num_writers_waiting;
+  bool writer;
   mutex internal_mutex;
+
 };
