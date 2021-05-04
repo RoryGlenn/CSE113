@@ -15,6 +15,7 @@ public:
   {
     // Implement me!
     writer              = false;
+    flip                = false;
     num_readers         = 0;
     num_writers_waiting = 0;
   }
@@ -22,15 +23,14 @@ public:
   void lock_reader()
   {
     // Implement me!
-
-    // if there is a writer waiting, we should yield
-    if (num_writers_waiting > 0)
-    {
-      this_thread::sleep_for(std::chrono::microseconds(50));
-      // this_thread::yield();
-    }
-
     bool acquired = false;
+    flip = !flip;
+
+    // if there is a writer waiting, we should wait
+    if (num_writers_waiting > 1 && flip)
+    {
+      this_thread::sleep_for ( std::chrono::nanoseconds(1) );
+    }
 
     while (!acquired)
     {
@@ -94,11 +94,13 @@ public:
     internal_mutex.unlock();
   }
 
+
 private:
   // Give me some private variables!
   int num_readers;
   int num_writers_waiting;
   bool writer;
+  bool flip;
   mutex internal_mutex;
 
 };

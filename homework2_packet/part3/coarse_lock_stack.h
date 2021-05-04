@@ -1,6 +1,10 @@
 #include <mutex>
 using namespace std;
 
+// docker pull reeselevine/cse113:latest
+// docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
+// make
+
 class Llist_node
 {
 public:
@@ -12,7 +16,9 @@ public:
 
   int data;
   Llist_node *next;
+
 };
+
 
 class CSE113_Stack
 {
@@ -24,8 +30,11 @@ public:
 
   int pop()
   {
+    internal_mutex.lock();
+
     if (start == NULL)
     {
+      internal_mutex.unlock();
       return -1;
     }
 
@@ -34,11 +43,14 @@ public:
       int ret = start->data;
       delete start;
       start = NULL;
+      internal_mutex.unlock();
       return ret;
     }
 
-    Llist_node *current = start->next;
+    // move to the top of the stack
+    Llist_node *current  = start->next;
     Llist_node *previous = start;
+
     while (current->next != NULL)
     {
       previous = current;
@@ -48,13 +60,19 @@ public:
     int ret = current->data;
     previous->next = NULL;
     delete current;
+
+    internal_mutex.unlock();
     return ret;
   }
 
   int peek()
   {
+
+    internal_mutex.lock();
+
     if (start == NULL)
     {
+      internal_mutex.unlock();
       return -1;
     }
 
@@ -63,15 +81,19 @@ public:
     {
       current = current->next;
     }
+
+    internal_mutex.unlock();
     return current->data;
   }
 
   void push(int p)
   {
+    internal_mutex.lock();
+
     if (start == NULL)
     {
-
       start = new Llist_node(p);
+      internal_mutex.unlock();
       return;
     }
 
@@ -82,8 +104,12 @@ public:
     }
 
     current->next = new Llist_node(p);
+    internal_mutex.unlock();
   }
+
 
 private:
   Llist_node *start;
+  mutex internal_mutex;
+
 };
