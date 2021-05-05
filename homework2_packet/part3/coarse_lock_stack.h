@@ -43,6 +43,7 @@ public:
       int ret = start->data;
       delete start;
       start = NULL;
+      
       internal_mutex.unlock();
       return ret;
     }
@@ -67,7 +68,6 @@ public:
 
   int peek()
   {
-
     internal_mutex.lock();
 
     if (start == NULL)

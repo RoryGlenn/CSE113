@@ -58,6 +58,7 @@ public:
         while ((j != thread_id) && this->level[j] >= i && this->victim[i] == thread_id)
         {
         }
+        
       }
     }
   }

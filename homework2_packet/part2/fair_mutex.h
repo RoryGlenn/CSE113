@@ -15,7 +15,6 @@ public:
   {
     // Implement me!
     writer              = false;
-    flip                = false;
     num_readers         = 0;
     num_writers_waiting = 0;
   }
@@ -24,12 +23,22 @@ public:
   {
     // Implement me!
     bool acquired = false;
-    flip = !flip;
+    bool check = false;
 
+    // need to lock num_writers_waiting because it is shared amongst threads
+    internal_mutex.lock();
     // if there is a writer waiting, we should wait
-    if (num_writers_waiting > 1 && flip)
+    if (num_writers_waiting > 1)
     {
+      internal_mutex.unlock();
+      check = true;
       this_thread::sleep_for ( std::chrono::nanoseconds(1) );
+    }
+
+    // check if we have already unlocked or not.
+    if (!check)
+    {
+      internal_mutex.unlock();
     }
 
     while (!acquired)
@@ -64,6 +73,8 @@ public:
     num_writers_waiting++;
     internal_mutex.unlock();
 
+
+
     bool acquired = false;
     
     while (!acquired)
@@ -84,6 +95,10 @@ public:
     num_writers_waiting--;
     internal_mutex.unlock();
 
+    // Without a yield here, we have more than 5x writes than reads.
+    // The yield slows down the writers to even this out a little bit more.
+    this_thread::yield();
+
   }
 
   void unlock()
@@ -100,7 +115,6 @@ private:
   int num_readers;
   int num_writers_waiting;
   bool writer;
-  bool flip;
   mutex internal_mutex;
 
 };
