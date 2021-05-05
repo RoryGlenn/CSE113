@@ -3,8 +3,6 @@
 // docker pull reeselevine/cse113:latest
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
-// what is the built in lock in C++?
-
 #include <atomic>
 using namespace std;
 
@@ -22,15 +20,15 @@ public:
     delete[] this->flag;
   }
 
-  int find_largest(int *array)
+  int find_largest( atomic<int>* array)
   {
-    int largest = array[0];  // <- race (i think its ok though?)
+    int largest = array[0].load(); 
 
-    for (int i = 1; i < this->number_threads; i++)
+    for (int i = 1; i < number_threads; i++)
     {
-      if (largest < array[i])
+      if (largest < array[i].load())
       {
-        largest = array[i];
+        largest = array[i].load();
       }
     }
 
@@ -40,14 +38,14 @@ public:
   void init(int num_threads)
   {
     // Implement me!
-    this->flag = new bool[num_threads];
-    this->label = new int[num_threads];
-    this->number_threads = num_threads;
+    flag  = new atomic<bool>[num_threads];
+    label = new atomic<int>[num_threads];
+    number_threads = num_threads;
 
     for (int i = 0; i < num_threads; i++)
     {
-      this->flag[i] = false;
-      this->label[i] = 0;
+      flag[i].store(false);
+      label[i].store(0);
     }
   }
 
@@ -55,48 +53,32 @@ public:
   void lock(int thread_id)
   {
     // Implement me!
-    this->flag[thread_id] = true; // <- race (i think its ok though?)
-
-    int largest = find_largest(this->label);
-
-    this->label[thread_id] = largest + 1; // <- race (i think its ok though?)
+    flag[thread_id].store(true);
+    label[thread_id].store( find_largest(label) + 1 );
 
     for (int j = 0; j < this->number_threads; j++)
     {
-       // is this suppose to be   != or ==     ?
-      if (thread_id == j) 
-      {
-        continue;
-      }
-      else
-      {
-        // old spin
-        // while (j != thread_id && (this->flag[j] && (this->label[j] < label[thread_id]) || (this->label[thread_id] == this->label[j] && j < thread_id)));
-
+        // spin
         // when running the binary, I will get caught in an infinite loop once every other time.
-        while (this->flag[j] && (this->label[j] < label[thread_id]) || (this->label[thread_id] == this->label[j] && j < thread_id)) 
-        { 
-          // printf("thread_id: %d\n", thread_id);
-          // printf("label[%d]: %d\n", thread_id, label[thread_id]);
-          printf("j: %d\n", j);
-        };
 
-      }
+        while ( j != thread_id && (this->flag[j] && (this->label[j] < label[thread_id]) || (this->label[thread_id] == this->label[j] && j < thread_id)) ) { /* spin */ }
+
     }
 
     // from the book
     // while ((3k != thread_id) && (this->flag[k] && (this->label[k], k) << this->label[thread_id], thread_id)) { };
   }
 
+
   void unlock(int thread_id)
   {
     // Implement me!
-    this->flag[thread_id] = false; // <- race (i think its ok though?)
+    flag[thread_id].store(false);
   }
 
 private:
   // Give me some private variables!
-  bool *flag;
-  int *label;
+  atomic<bool>* flag;
+  atomic<int>*  label;
   int number_threads;
 };

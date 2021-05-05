@@ -79,8 +79,6 @@ int main(int argc, char *argv[])
     num_threads = atoi(argv[1]);
   }
 
-  printf("num_threads: %d\n", num_threads);
-
   // Create a new array for the number of threads
   thread *thread_array = new thread[num_threads];
   init(num_threads);
