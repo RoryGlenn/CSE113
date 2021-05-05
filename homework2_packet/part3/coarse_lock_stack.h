@@ -82,8 +82,11 @@ public:
       current = current->next;
     }
 
+    // somehow by returning temp_data and not current->data, we avoid a race condition.
+    int temp_data = current->data;
     internal_mutex.unlock();
-    return current->data;
+
+    return temp_data;
   }
 
   void push(int p)

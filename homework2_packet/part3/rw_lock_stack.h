@@ -29,11 +29,11 @@ public:
   int pop()
   {
 
-    shared_mtx.lock();
+    s_mtx.lock();
     
     if (start == NULL)
     {
-      shared_mtx.unlock();
+      s_mtx.unlock();
       return -1;
     }
     
@@ -42,7 +42,7 @@ public:
       int ret = start->data;
       delete start;
       start = NULL;
-      shared_mtx.unlock();
+      s_mtx.unlock();
       return ret;
     }
 
@@ -58,17 +58,18 @@ public:
     previous->next = NULL;
     delete current;
 
-    shared_mtx.unlock();
+    s_mtx.unlock();
     return ret;
   }
 
   int peek()
   {
-    shared_mtx.lock_shared();
+    s_mtx.lock_shared();
+    // lock_guard<shared_mutex> lockGuard(s_mtx);
 
     if (start == NULL)
     {
-      shared_mtx.unlock_shared();
+      s_mtx.unlock_shared();
       return -1;
     }
 
@@ -78,19 +79,21 @@ public:
       current = current->next;
     }
 
-    shared_mtx.unlock_shared();
-    return current->data;
+    int temp_data = current->data;
+
+    s_mtx.unlock_shared();
+    return temp_data;
   }
 
 
   void push(int p)
   {
-    shared_mtx.lock();
+    s_mtx.lock();
 
     if (start == NULL)
     {
       start = new Llist_node(p);
-      shared_mtx.unlock();
+      s_mtx.unlock();
       return;
     }
 
@@ -102,7 +105,7 @@ public:
 
     current->next = new Llist_node(p);
     
-    shared_mtx.unlock();
+    s_mtx.unlock();
   }
 
 private:
@@ -110,5 +113,6 @@ private:
 
   // You should identify when you need to use the full lock, and when you can use the reader lock.
   // Recall that the reader lock call is lock_shared and unlock_shared.
-  shared_mutex shared_mtx;
+  shared_mutex s_mtx;
+  // lock_guard<shared_mutex> lockGuard{s_mtx};
 };

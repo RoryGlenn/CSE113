@@ -20,7 +20,7 @@ public:
     delete[] this->flag;
   }
 
-  int find_largest( atomic<int>* array)
+  int find_largest(atomic<int>* array)
   {
     int largest = array[0].load(); 
 
@@ -55,14 +55,10 @@ public:
     // Implement me!
     flag[thread_id].store(true);
     label[thread_id].store( find_largest(label) + 1 );
-
-    for (int j = 0; j < this->number_threads; j++)
+    
+    for (int j = 0; j < number_threads; j++)
     {
-        // spin
-        // when running the binary, I will get caught in an infinite loop once every other time.
-
-        while ( j != thread_id && (this->flag[j] && (this->label[j] < label[thread_id]) || (this->label[thread_id] == this->label[j] && j < thread_id)) ) { /* spin */ }
-
+      while ( j != thread_id && (flag[j].load() && (label[j].load() < label[thread_id].load()) || (label[thread_id].load() == label[j].load() && j < thread_id)) ) { /* spin */ }
     }
 
     // from the book

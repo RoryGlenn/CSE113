@@ -1,9 +1,7 @@
 #include <shared_mutex>
 using namespace std;
 
-// docker pull reeselevine/cse113:latest
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
-// make
 
 
 // Llist_node
@@ -84,9 +82,11 @@ public:
       current = current->next;
     }
 
+    int temp_data = current->data;
+
     shared_mtx.unlock_shared();
 
-    return current->data;
+    return temp_data;
   }
 
   void push(int p)
@@ -115,17 +115,11 @@ public:
     // Implement me!
     this->pop();
     this->push(to_swap);
-
-    // internal_mutex.lock();
-    // if (start != NULL)
-    //   cout << "start: " << start->data << endl;
-    // internal_mutex.unlock();
   }
 
 
 private:
   Llist_node *start;
   shared_mutex shared_mtx;
-  // mutex internal_mutex;
 
 };
