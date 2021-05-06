@@ -46,6 +46,7 @@ public:
       int ret = start->data;
       delete start;
       start = NULL;
+      
       shared_mtx.unlock();
       return ret;
     }
@@ -61,6 +62,7 @@ public:
     int ret = current->data;
     previous->next = NULL;
     delete current;
+
     shared_mtx.unlock();
     return ret;
   }
@@ -85,7 +87,6 @@ public:
     int temp_data = current->data;
 
     shared_mtx.unlock_shared();
-
     return temp_data;
   }
 
@@ -101,6 +102,7 @@ public:
     }
 
     Llist_node *current = start;
+
     while (current->next != NULL)
     {
       current = current->next;

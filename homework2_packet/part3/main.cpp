@@ -1,6 +1,5 @@
 // docker pull reeselevine/cse113:latest
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
-// make
 
 #include <iostream>
 #include <thread>

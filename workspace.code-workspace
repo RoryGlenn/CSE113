@@ -21,7 +21,10 @@
 			"system_error": "cpp",
 			"xmemory": "cpp",
 			"tuple": "cpp",
-			"utility": "cpp"
+			"utility": "cpp",
+			"random": "cpp",
+			"iostream": "cpp",
+			"ostream": "cpp"
 		}
 	},
 	"launch": {

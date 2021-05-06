@@ -48,7 +48,6 @@ public:
       return ret;
     }
 
-    // move to the top of the stack
     Llist_node *current  = start->next;
     Llist_node *previous = start;
 
@@ -82,7 +81,6 @@ public:
       current = current->next;
     }
 
-    // somehow by returning temp_data and not current->data, we avoid a race condition.
     int temp_data = current->data;
     internal_mutex.unlock();
 
