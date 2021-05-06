@@ -60,7 +60,7 @@ void test_mutex(int thread_id)
 
     total_number++;
     histogram[thread_id]++;
-
+    
     unlock(thread_id);
 
     // Update the timer
@@ -103,12 +103,13 @@ int main(int argc, char *argv[])
   }
 
   // Print stats
-  cout << "total number: " << total_number << endl;
+  cout << "total number:  " << total_number << endl;
 
   for (int i = 0; i < num_threads; i++)
   {
     cout << i << ":histogram: " << histogram[i] << endl;
   }
+
 
   // cleanup the memory
   delete[] thread_array;

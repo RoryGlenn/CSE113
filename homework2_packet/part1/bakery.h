@@ -3,6 +3,7 @@
 // docker pull reeselevine/cse113:latest
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
+
 #include <atomic>
 using namespace std;
 
@@ -55,14 +56,16 @@ public:
     // Implement me!
     flag[thread_id].store(true);
     label[thread_id].store( find_largest(label) + 1 );
-    
+
     for (int j = 0; j < number_threads; j++)
     {
-      while ( j != thread_id && (flag[j].load() && (label[j].load() < label[thread_id].load()) || (label[thread_id].load() == label[j].load() && j < thread_id)) ) { /* spin */ }
-    }
+      while ( j != thread_id && (flag[j].load() && (label[j].load() < label[thread_id].load()) || (label[thread_id].load() == label[j].load() && j < thread_id)) ) 
+      { 
+        /* spin */ 
+        this_thread::yield();
+      }
+    }      
 
-    // from the book
-    // while ((3k != thread_id) && (this->flag[k] && (this->label[k], k) << this->label[thread_id], thread_id)) { };
   }
 
 

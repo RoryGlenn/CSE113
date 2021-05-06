@@ -51,7 +51,11 @@ public:
 
       for (int j = 0; j < number_threads; j++)
       {
-        while ( (j != thread_id) && level[j].load() >= i && victim[i].load() == thread_id ) { /* spin */ }
+        while ( (j != thread_id) && level[j].load() >= i && victim[i].load() == thread_id ) 
+        { 
+          /* spin */ 
+          this_thread::yield();  
+        }
       }
     }
   }

@@ -7,6 +7,10 @@
 using namespace std;
 using namespace std::chrono_literals;
 
+
+
+
+
 class rw_mutex
 {
 
@@ -72,8 +76,6 @@ public:
     internal_mutex.lock();
     num_writers_waiting++;
     internal_mutex.unlock();
-
-
 
     bool acquired = false;
     
