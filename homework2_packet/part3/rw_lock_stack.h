@@ -114,5 +114,6 @@ private:
   // You should identify when you need to use the full lock, and when you can use the reader lock.
   // Recall that the reader lock call is lock_shared and unlock_shared.
   shared_mutex s_mtx;
+  
   // lock_guard<shared_mutex> lockGuard{s_mtx};
 };

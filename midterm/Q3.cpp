@@ -1,22 +1,9 @@
-// docker pull reeselevine/cse113:latest
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
-// make
 
 #include <iostream>
 #include <thread>
 #include <mutex>
 using namespace std;
-
-void print_array(int* array, string name)
-{
-    for (int i = 0; i < sizeof(array)/sizeof(array[0]); i++)
-    {
-        cout << name << "[";
-        printf("%d]: %d\n", i, array[i]);
-    }
-
-    cout << endl;
-}
 
 
 void foo(int *a, int *b, int *c, mutex *m0, mutex *m1)
@@ -58,9 +45,9 @@ void bar(int *a, int *b, int *c, mutex *m0, mutex *m1)
 
 void baz(int *a, int *b, int *c, mutex *m0, mutex *m1)
 {
-    m0->lock();
+    m1->lock();
     a[0] = b[0];
-    m0->unlock();
+    m1->unlock();
 } 
     
 
@@ -70,7 +57,6 @@ void qux(int *a, int *b, int *c, mutex *m0, mutex *m1)
     c[0] = b[0] + c[0];
     m1->unlock();
 }
-
 
 
 
@@ -85,12 +71,7 @@ int main()
 
     // a and c are changed but b is never changed.
 
-    // use m0 to lock a, use m1 to lock c?
-
-    cout << "before" << endl;
-    print_array(a, "a");
-    print_array(b, "b");
-    print_array(c, "c");
+    // I use m0 to lock a, m1 to lock c. I don't lock b because nothing modifies it.
 
     thread tfoo = thread(foo, a, b, c, &m0, &m1);
     thread tbar = thread(bar, c, c, c, &m0, &m1);
@@ -103,11 +84,10 @@ int main()
     tbaz.join();
     tqux.join();
 
-    cout << "before" << endl;
-    print_array(a, "a");
-    print_array(b, "b");
-    print_array(c, "c");
-    
+    // printf("a[0]: %d\n",a[0]);
+    // printf("b[0]: %d\n",b[0]);
+    // printf("c[0]: %d\n",c[0]);
+
     // after using threads I get the same result as not using threads at all. Whats the point?
 
     return 0;

@@ -14,7 +14,14 @@
 			"shared_mutex": "cpp",
 			"thread": "cpp",
 			"xtr1common": "cpp",
-			"atomic": "cpp"
+			"atomic": "cpp",
+			"istream": "cpp",
+			"memory": "cpp",
+			"stop_token": "cpp",
+			"system_error": "cpp",
+			"xmemory": "cpp",
+			"tuple": "cpp",
+			"utility": "cpp"
 		}
 	},
 	"launch": {

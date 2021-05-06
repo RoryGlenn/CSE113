@@ -21,7 +21,17 @@ int main()
     int*  a = new int[1];
 
     a[0] = 0;
-    a[0] = 0;
+    a[1] = 0;
+
+
+    // t1 will access even indices
+    // t2 will access odd indices
+
+    // t1 will a[even]++;
+    // t2 will a[odd]++;
+
+    // even+=2
+    // odd+=2
 
     thread t1 = thread(increment, a, 0, &m);
     thread t2 = thread(increment, a, 1, &m);
