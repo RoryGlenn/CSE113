@@ -115,7 +115,6 @@ public:
 
   void swap_pop()
   {
-
     if (start == NULL)
     {
       return;
@@ -138,7 +137,6 @@ public:
 
     previous->next = NULL;
     delete current;
-
   }
 
 
