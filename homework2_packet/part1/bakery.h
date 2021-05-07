@@ -60,11 +60,11 @@ public:
     for (int j = 0; j < number_threads; j++)
     {
       while ( j != thread_id && (flag[j].load() && (label[j].load() < label[thread_id].load()) || (label[thread_id].load() == label[j].load() && j < thread_id)) ) 
-      { 
+      {
         /* spin */ 
         this_thread::yield();
       }
-    }      
+    }
 
   }
 

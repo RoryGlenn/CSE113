@@ -46,7 +46,7 @@ public:
       int ret = start->data;
       delete start;
       start = NULL;
-      
+
       shared_mtx.unlock();
       return ret;
     }
@@ -112,11 +112,80 @@ public:
     shared_mtx.unlock();
   }
 
+
+  void swap_pop()
+  {
+
+    if (start == NULL)
+    {
+      return;
+    }
+
+    if (start->next == NULL)
+    {
+      delete start;
+      start = NULL;
+      return;
+    }
+
+    Llist_node *current = start->next;
+    Llist_node *previous = start;
+    while (current->next != NULL)
+    {
+      previous = current;
+      current = current->next;
+    }
+
+    previous->next = NULL;
+    delete current;
+
+  }
+
+
+  void swap_push(int p)
+  {
+
+    if (start == NULL)
+    {
+      start = new Llist_node(p);
+      return;
+    }
+
+    Llist_node *current = start;
+
+    while (current->next != NULL)
+    {
+      current = current->next;
+    }
+
+    current->next = new Llist_node(p);
+  }
+
+
   void swaptop(int to_swap)
   {
     // Implement me!
-    this->pop();
-    this->push(to_swap);
+
+    shared_mtx.lock();
+
+    if (start == NULL)
+    {
+      shared_mtx.unlock();
+      return;
+    }
+
+    // check if top is the same or not
+    int temp_data = start->data;
+
+    if (temp_data != to_swap)
+    {
+      // swap the top
+      this->swap_pop();
+      this->swap_push(to_swap);
+    }
+
+    shared_mtx.unlock();
+  
   }
 
 
