@@ -18,10 +18,6 @@ public:
     tail.store(-1);
   }
 
-  ~CQueue()
-  {
-  }
-
 
   // when we enq, we increment the tail
   // enq to the head
@@ -58,7 +54,7 @@ public:
   float deq()
   {
     // check if queue is empty
-    while ( (head.load() == -1 && tail.load() == -1) )
+    while ( head.load() == -1 && tail.load() == -1 )
     {
       // queue is empty
       // spin...
