@@ -69,5 +69,7 @@ int main()
   memory_thread.join();
   trig_thread.join();
 
+  delete[] a;
+
   return 0;
 }

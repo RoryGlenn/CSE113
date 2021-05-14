@@ -14,25 +14,22 @@ public:
   CQueue()
   {
     // Implement me!
-    list = new atomic<float>[CQUEUE_SIZE];
     head.store(-1);
     tail.store(-1);
   }
 
-  void print_array()
+  ~CQueue()
   {
-    for (int i = 0; i < CQUEUE_SIZE; i++)
-    {
-      printf("circular_list[%d]: %f\n", i, list[i].load());
-    }
-    exit(EXIT_FAILURE);
   }
 
+
+  // when we enq, we increment the tail
   // enq to the head
   void enq(float e)
   {
+
     // queue is full
-    while (this->size() >= CQUEUE_SIZE)
+    while ( ((tail.load()+1) % CQUEUE_SIZE) == head.load() )
     {
       // spin...
     }
@@ -44,48 +41,44 @@ public:
     }
 
     tail.store( (tail.load() + 1) % CQUEUE_SIZE );
-    list[0].store(e); // <- heap-buffer-overflow
 
+    list[tail.load()].store(e); // <- buffer-overflow
+    
   }
+
 
   void enq_8(float e[8])
   {
     // Implement me for part 4
   }
 
+
+  // when we deq, we increment the head
   // deq from the tail
   float deq()
   {
     // check if queue is empty
-    while (this->size() <= 0)
+    while ( (head.load() == -1 && tail.load() == -1) )
     {
+      // queue is empty
       // spin...
     }
-    printf("head.load(): %d\n", head.load());
 
-    int data = -1;
-    if (head.load() != -1)
-    {
-      data = list[head.load()];
-    }
+    int head_index = head.load();
 
-
+    // if there is only one element in the queue
     if (head.load() == tail.load())
     {
       head.store(-1);
       tail.store(-1);
     }
-    else if (tail.load() == CQUEUE_SIZE - 1)
-    {
-      // queue is full so reposition the tail in the front
-      tail.store(0);
-    }
     else
     {
-      tail.store(tail.load() + 1);
+      head.store( (head.load() + 1) % CQUEUE_SIZE);
     }
 
-    return data;
+    return list[head_index].load();
+
   }
 
   void deq_8(float e[8])
@@ -95,30 +88,12 @@ public:
 
   int size()
   {
-    // check if the queue is full
-    if (tail.load() == CQUEUE_SIZE - 1 && head.load() == 0)
-    {
-      return CQUEUE_SIZE;
-    }
-
-    // check if the queue is full
-    if (tail.load()-1 == head.load())
-    {
-      return CQUEUE_SIZE;
-    }
-
-    // check if queue is empty
-    if (head.load() == -1)
-    {
-      return 0;
-    }
-
-    return 2;
+    return 0;
   }
 
 private:
   // give me some variables!
   atomic_int head;
   atomic_int tail;
-  atomic<float> *list;
+  atomic<float> list[CQUEUE_SIZE];
 };
