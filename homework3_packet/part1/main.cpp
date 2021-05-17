@@ -11,8 +11,7 @@
 #include "CQueue.h"
 #endif
 
-// #define SIZE (1024 * 1024 * 8) // 8,388,608
-#define SIZE 4
+#define SIZE (1024 * 1024 * 8) // 8,388,608
 
 CQueue memory_to_trig;
 CQueue trig_to_memory;
@@ -37,10 +36,7 @@ void memory_thread_func(float *a, int size)
     float loaded = a[i];
     memory_to_trig.enq(loaded);
     float to_store = trig_to_memory.deq();
-    printf("to_store: %f\n", to_store);
-
     a[i] = to_store;
-    // printf("a[%d]:    %f\n\n", i, a[i]);
   }
 }
 
@@ -54,7 +50,6 @@ void trig_thread_func(int size)
   for (int i = 0; i < size; i++)
   {
     float consume = memory_to_trig.deq(); // <- Error: Returns 0
-    printf("consume: %f\n", consume);
     consume = cos(consume);
     trig_to_memory.enq(consume);
   }
@@ -62,7 +57,7 @@ void trig_thread_func(int size)
 
 int main()
 {
-  printf("\n\n\n");
+  // printf("\n\n\n");
   float *a = new float[SIZE];
 
   for (int i = 0; i < SIZE; i++)
