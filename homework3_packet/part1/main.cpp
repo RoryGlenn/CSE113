@@ -49,7 +49,7 @@ void trig_thread_func(int size)
 
   for (int i = 0; i < size; i++)
   {
-    float consume = memory_to_trig.deq(); // <- Error: Returns 0
+    float consume = memory_to_trig.deq(); 
     consume = cos(consume);
     trig_to_memory.enq(consume);
   }

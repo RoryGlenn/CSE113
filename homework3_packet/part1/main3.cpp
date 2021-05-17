@@ -12,7 +12,6 @@ CQueue trig_to_memory;
 
 void memory_thread_func(float *a, int size)
 {
-
   for (int i = 0; i < size; i+=8)
   {
     //Implement me!
@@ -59,7 +58,6 @@ void memory_thread_func(float *a, int size)
     // a[i+5] = to_store5;
     // a[i+6] = to_store6;
     // a[i+7] = to_store7;
-
   }
 }
 

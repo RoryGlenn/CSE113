@@ -16,7 +16,6 @@ public:
     // Implement me!
     head.store(0);
     tail.store(0);
-    count.store(0);
 
     for (int i = 0; i < CQUEUE_SIZE; i++)
     {
@@ -51,12 +50,21 @@ public:
 
     list[head.load()] = e;
     head.store( (head.load() + 1) % CQUEUE_SIZE );
-    count.store(count.load()+1);
   }
 
+  // It enqueues 8 floats starting at the initial location of the array, i.e. e[0] - e[7]. 
   void enq_8(float e[8])
   {
     // Implement me for part 4
+
+    while ( is_full() ) { /* spin */ }
+
+    for (int i = 0; i < 8; i++) 
+    {
+      list[head.load()] = e[i];
+      head.store((head.load()+1) % CQUEUE_SIZE);
+    }
+
   }
 
   // deq increment tail
@@ -67,18 +75,28 @@ public:
     float temp = list[tail.load()];
     list[tail.load()] = 0;
     tail.store( (tail.load() + 1) % CQUEUE_SIZE );
-    count.store( count.load() - 1 );
     return temp;
   }
 
+
+  // reads 8 values from the queue and stores them in e[0] - e[7].
   void deq_8(float e[8])
   {
     // Implement me for part 4
+    while ( is_empty() ) {  /* spin */ }
+
+    for (int i = 0; i < 8; i++)
+    {
+      e[i] = list[tail.load()];
+      list[tail.load()] = 0;
+      tail.store( (tail.load() + 1) % CQUEUE_SIZE );
+    }
+
   }
 
   int size()
   {
-    return count.load();
+    return 0;
   }
 
 private:
