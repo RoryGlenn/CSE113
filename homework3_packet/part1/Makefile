@@ -3,7 +3,7 @@
 
 all:
 	g++ -DSYNCQUEUE main.cpp -pthread -o syncQueue
-	g++ main.cpp -pthread -o asyncQueue
+	g++ main.cpp -pthread  -o asyncQueue
 	g++ main3.cpp -pthread -o queue8
 	g++ main4.cpp -pthread -o queue8API
 
