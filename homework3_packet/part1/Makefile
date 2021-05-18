@@ -5,7 +5,7 @@ all:
 	g++ -DSYNCQUEUE main.cpp -pthread -o syncQueue
 	g++ main.cpp -pthread -o asyncQueue
 	g++ main3.cpp -pthread -o queue8
-	g++ main4.cpp -pthread -Wall -Wextra -Wpedantic -Wshadow -g -fsanitize=address  -o queue8API
+	g++ main4.cpp -pthread -o queue8API
 
 clean:
 	rm asyncQueue queue8 queue8API syncQueue

@@ -16,6 +16,7 @@ public:
     // Implement me!
     head.store(0);
     tail.store(0);
+    count.store(0);
 
     for (int i = 0; i < CQUEUE_SIZE; i++)
     {
@@ -50,6 +51,7 @@ public:
 
     list[head.load()] = e;
     head.store( (head.load() + 1) % CQUEUE_SIZE );
+    count.store((count.load() + 1) % CQUEUE_SIZE);
   }
 
   // It enqueues 8 floats starting at the initial location of the array, i.e. e[0] - e[7]. 
@@ -63,6 +65,7 @@ public:
     {
       list[head.load()] = e[i];
       head.store((head.load()+1) % CQUEUE_SIZE);
+      count.store((count.load() + 1) % CQUEUE_SIZE);
     }
 
   }
@@ -75,6 +78,7 @@ public:
     float temp = list[tail.load()];
     list[tail.load()] = 0;
     tail.store( (tail.load() + 1) % CQUEUE_SIZE );
+    count.store((count.load() - 1) % CQUEUE_SIZE);
     return temp;
   }
 
@@ -90,13 +94,14 @@ public:
       e[i] = list[tail.load()];
       list[tail.load()] = 0;
       tail.store( (tail.load() + 1) % CQUEUE_SIZE );
+      count.store((count.load() - 1) % CQUEUE_SIZE);
     }
 
   }
 
   int size()
   {
-    return 0;
+    return count.load();
   }
 
 private:
