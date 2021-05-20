@@ -38,7 +38,6 @@ void parallel_mult(float* result_parallel, int* mult, int size, int tid, int num
 //       check_work[i] = check_work[i] + base;
 //     }
 //   }
-
 // }
 
 int main()

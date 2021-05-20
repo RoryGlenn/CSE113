@@ -2,38 +2,57 @@
 #include <iostream>
 using namespace std;
 
+// docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
+
+
+// Queue in which multiple threads read (deq), or write (enq), but not both
+
+// Why would we want a thing?
+
+// Computation done in phases:
+  // First phase prepares the queue (by writing into it)
+  // All threads join
+  // Second phase reads values from the queue
+
 class IOQueue
 {
 
 public:
   IOQueue()
   {
-    head.store(0);
-    tail.store(0);
   }
+
+  ~IOQueue()
+  {
+    delete[] list_ptr;
+  }
+
 
   // Use this function to initialize the queue to
   // the size that you need.
   void init(int size)
   {
+    head.store(0); 
+    tail.store(0);
     list_ptr = new int[size];
   }
 
   // enqueue the element e into the queue
-  void enq(int e)
+  void enq(int e) // write = enq()
   {
-    int reserved_index = atomic_fetch_add(&tail, 1);
-    list[reserved_index] = e;
+    int reserved_index = atomic_fetch_add(&head, 1);
+    list_ptr[reserved_index] = e;
   }
 
   // return a value from the queue.
-  // return -1 if there is no more values
+  // return -1 if there if no more values
   // from the queue.
-  int deq()
+  int deq() // read = deq()
   {
-    int reserved_index = atomic_fetch_add(&head, 1);
-    if (reserved_index > SIZE) { throw exception("Error: array index out of bounds"); }
-    return list[reserved_index];
+    int reserved_index = atomic_fetch_add(&tail, 1);
+    // if (reserved_index > SIZE) { return -1; }
+    if (reserved_index > head.load()) { return -1; }
+    return list_ptr[reserved_index];
   }
   
 
@@ -57,7 +76,6 @@ private:
   // Give me some private variables
   atomic_int head;
   atomic_int tail;
-  int list[SIZE];
   int* list_ptr;
 
 };
