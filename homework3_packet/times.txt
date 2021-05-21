@@ -56,4 +56,3 @@ user    0m12.623s
 sys     0m0.000s
 
 
-Change the number of threads to match how many cores you have on your machine.
