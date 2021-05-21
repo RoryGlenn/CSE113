@@ -1,4 +1,8 @@
 
+// docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
+
+
+
 #include <math.h>
 #include <thread>
 #include <atomic>

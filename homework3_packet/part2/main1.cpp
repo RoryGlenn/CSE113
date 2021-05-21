@@ -80,9 +80,10 @@ int main()
   //   }
   // }
   // /////
+  
+  // delete[] check_work;
 
   delete[] result_parallel;
-  // delete[] check_work;
   delete[] mult;
   return 0;
 

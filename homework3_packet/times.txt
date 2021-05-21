@@ -1,0 +1,59 @@
+PART 1
+
+time ./syncQueue
+real    0m2.211s
+user    0m4.240s
+sys     0m0.010s
+
+time ./asyncQueue
+real    0m3.176s
+user    0m6.180s
+sys     0m0.000s
+
+time ./queue8
+real    0m2.517s
+user    0m4.864s
+sys     0m0.000s
+
+time ./queue8API
+real    0m3.092s
+user    0m6.012s
+sys     0m0.000s
+
+
+
+PART 2: Default Threads (8)
+
+time ./static
+real    0m3.105s 
+user    0m13.268s
+sys     0m0.010s 
+
+time ./global
+real    0m9.918s
+user    1m19.255s
+sys     0m0.000s
+
+
+time ./stealing
+real    0m0.302s
+user    0m2.200s
+sys     0m0.038s
+
+
+time ./stealing32
+real    0m0.030s
+user    0m0.070s
+sys     0m0.010s
+
+
+
+PART 2: 1 Thread
+Change the number of threads to 1 in utils.h and run static to get a single threaded measurement of runtime.
+time ./static
+real    0m12.632s
+user    0m12.623s
+sys     0m0.000s
+
+
+Change the number of threads to match how many cores you have on your machine.
