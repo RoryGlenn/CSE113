@@ -26,7 +26,7 @@ void parallel_enq(int size, int tid, int num_threads)
 
 }
 
-void parallel_mult(float *result_parallel, int *mult, int size, int tid, int num_threads)
+void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
 {
   // Implement me using a workstealing approach.
   // You should use the Q IOQueues to compute
@@ -41,7 +41,7 @@ void parallel_mult(float *result_parallel, int *mult, int size, int tid, int num
 
     for (int j = 0; j < mult[index]-1; j++)
     {
-      result_parallel[index] = result_parallel[index] + base; 
+      result_parallel[index] = result_parallel[index] + base;
     }
 
   }
@@ -53,6 +53,7 @@ void parallel_mult(float *result_parallel, int *mult, int size, int tid, int num
   while ( finished_threads.load() != num_threads )
   {
     int target = (tid + 1) % NUM_THREADS; // pick a thread to steal from
+    
     int index  = Q[target].deq();
 
     // check if task is valid
@@ -90,7 +91,6 @@ int main()
   float* check_work      = new float[SIZE];
   int*   mult            = new int[SIZE];
 
-
   for (int i = 0; i < SIZE; i++)
   {
     result_parallel[i] = i;
@@ -103,10 +103,10 @@ int main()
   // the indexes for each thread. Remember to initialize the Queues
   // with the size that they will need. Join the threads afterwards.
 
-  init_queue_array(SIZE);
+  init_queue_array(SIZE/NUM_THREADS);
+  // init_queue_array(SIZE);
 
   thread thread_array[NUM_THREADS];
-
 
   // enq threads
   for (int i = 0; i < NUM_THREADS; i++) { thread_array[i] = thread(parallel_enq, SIZE, i, NUM_THREADS); }
@@ -115,9 +115,8 @@ int main()
 
   // Next, launch the parallel function that performs the parallel_mult
   // function from main1.cpp and main2.cpp but using workstealing
-  for (int i = 0; i < NUM_THREADS; i++) { thread_array[i] = thread(parallel_mult, result_parallel, mult, SIZE, i, NUM_THREADS); }
+  for (int i = 0; i < NUM_THREADS; i++) { thread_array[i] = thread(parallel_mult, result_parallel, mult, i, NUM_THREADS); }
   for (int i = 0; i < NUM_THREADS; i++) { thread_array[i].join(); }  
-
 
   delete[] mult;
   delete[] check_work;

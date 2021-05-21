@@ -4,15 +4,14 @@ using namespace std;
 
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
-
 // Queue in which multiple threads read (deq), or write (enq), but not both
 
 // Why would we want a thing?
 
 // Computation done in phases:
-  // First phase prepares the queue (by writing into it)
-  // All threads join
-  // Second phase reads values from the queue
+// First phase prepares the queue (by writing into it)
+// All threads join
+// Second phase reads values from the queue
 
 class IOQueue
 {
@@ -27,12 +26,11 @@ public:
     delete[] list_ptr;
   }
 
-
   // Use this function to initialize the queue to
   // the size that you need.
   void init(int size)
   {
-    head.store(0); 
+    head.store(0);
     tail.store(0);
     list_ptr = new int[size];
   }
@@ -40,7 +38,7 @@ public:
   // enqueue the element e into the queue
   void enq(int e) // write = enq()
   {
-    int reserved_index = atomic_fetch_add(&head, 1);
+    int reserved_index       = atomic_fetch_add(&head, 1);
     list_ptr[reserved_index] = e;
   }
 
@@ -50,11 +48,10 @@ public:
   int deq() // read = deq()
   {
     int reserved_index = atomic_fetch_add(&tail, 1);
-    // if (reserved_index > SIZE) { return -1; }
-    if (reserved_index > head.load()) { return -1; }
+    
+    if (reserved_index >= head.load()) { return -1; }
     return list_ptr[reserved_index];
   }
-  
 
   int size()
   {
@@ -76,6 +73,5 @@ private:
   // Give me some private variables
   atomic_int head;
   atomic_int tail;
-  int* list_ptr;
-
+  int *list_ptr;
 };
