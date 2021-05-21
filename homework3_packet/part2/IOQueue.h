@@ -48,7 +48,6 @@ public:
   int deq() // read = deq()
   {
     int reserved_index = atomic_fetch_add(&tail, 1);
-    
     if (reserved_index >= head.load()) { return -1; }
     return list_ptr[reserved_index];
   }
@@ -65,9 +64,25 @@ public:
   // i.e. if the queue does not have 32 elements
   int deq_32(int ret[32])
   {
-    return -1;
-  }
+    for (int i = 0; i < 32; i++)
+    {
+      int reserved_index = atomic_fetch_add(&tail, 1);
 
+      if (reserved_index >= head.load())
+      {
+        // Error: invalid index
+        return -1;
+      }
+      else
+      {
+        // valid index
+        ret[i] = list_ptr[reserved_index];
+      }
+    }
+
+    // success!
+    return 0;
+  }
 
 private:
   // Give me some private variables

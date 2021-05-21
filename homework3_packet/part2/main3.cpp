@@ -33,7 +33,6 @@ void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
   // local work and then try to steal work
   // from others until all the work is completed
 
-  // int task = 0;
   for ( int index = Q[tid].deq(); index != -1; index = Q[tid].deq() )
   {
     // dynamic work based on task
@@ -88,14 +87,9 @@ void init_queue_array(int list_size)
 int main()
 {
   float* result_parallel = new float[SIZE];
-  float* check_work      = new float[SIZE];
   int*   mult            = new int[SIZE];
 
-  for (int i = 0; i < SIZE; i++)
-  {
-    result_parallel[i] = i;
-    check_work[i] = i;
-  }
+  for (int i = 0; i < SIZE; i++) { result_parallel[i] = i; }
   
   linear_work(mult, SIZE);
 
@@ -112,14 +106,12 @@ int main()
   for (int i = 0; i < NUM_THREADS; i++) { thread_array[i] = thread(parallel_enq, SIZE, i, NUM_THREADS); }
   for (int i = 0; i < NUM_THREADS; i++) { thread_array[i].join(); }
 
-
   // Next, launch the parallel function that performs the parallel_mult
   // function from main1.cpp and main2.cpp but using workstealing
   for (int i = 0; i < NUM_THREADS; i++) { thread_array[i] = thread(parallel_mult, result_parallel, mult, i, NUM_THREADS); }
   for (int i = 0; i < NUM_THREADS; i++) { thread_array[i].join(); }  
 
   delete[] mult;
-  delete[] check_work;
   delete[] result_parallel;
 
   return 0;
