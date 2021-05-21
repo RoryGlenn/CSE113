@@ -8,12 +8,6 @@
 IOQueue Q[NUM_THREADS];
 std::atomic_int finished_threads(0);
 
-// for (int i = 0; i < 32; i++)
-// {
-//   printf("index_array[%d]: %d\n", i, index_array[i]);
-// }
-// exit(EXIT_SUCCESS);
-
 void parallel_enq(int size, int tid, int num_threads)
 {
   // Use this function to enqueue indexes to each of the local
@@ -21,10 +15,13 @@ void parallel_enq(int size, int tid, int num_threads)
 
   // Hint: this should be the same as in main3.cpp
   int chunk_size = size / num_threads;
-  int start = chunk_size * tid;       
-  int end = start + chunk_size;       
+  int start = chunk_size * tid;
+  int end = start + chunk_size;
 
-  for (int x = start; x < end; x++) { Q[tid].enq(x); }
+  for (int x = start; x < end; x++)
+  {
+    Q[tid].enq(x);
+  }
 }
 
 void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
@@ -39,16 +36,12 @@ void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
 
   int index_array[32] = {-1};
 
-  if (Q[tid].deq_32(index_array) == -1)
-  {
-    // Error: invalid index
-  }
-  else
+  if (Q[tid].deq_32(index_array) == 0)
   {
     for (int i = 0; i < 32; i++)
     {
       // dynamic work based on task
-      int index  = index_array[i];
+      int index = index_array[i];
       float base = result_parallel[index]; // <- rc 2
 
       for (int j = 0; j < mult[index] - 1; j++)
@@ -66,18 +59,12 @@ void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
   {
     int target = (tid + 1) % NUM_THREADS; // pick a thread to steal from
 
-    if (Q[target].deq_32(index_array) == -1)
-    {
-      // Thread chosen has nothing left to work on.
-      // Pick a thread to steal from
-      target = (tid + 1) % NUM_THREADS;
-    }
-    else
+    if (Q[target].deq_32(index_array) == 0)
     {
       for (int i = 0; i < 32; i++)
       {
         // dynamic work based on task
-        int index  = index_array[i];
+        int index = index_array[i];
         float base = result_parallel[index]; // rc 1
 
         for (int j = 0; j < mult[index] - 1; j++)
@@ -85,6 +72,12 @@ void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
           result_parallel[index] = result_parallel[index] + base; // rc 1 // rc 2
         }
       }
+    }
+    else
+    {
+      // Thread chosen has nothing left to work on.
+      // Pick a thread to steal from
+      target = (tid + 1) % NUM_THREADS;
     }
   }
 }
@@ -96,6 +89,7 @@ void init_queue_array(int list_size)
     Q[i].init(list_size);
   }
 }
+
 
 int main()
 {
