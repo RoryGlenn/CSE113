@@ -42,7 +42,7 @@ void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
     {
       // dynamic work based on task
       int index = index_array[i];
-      float base = result_parallel[index]; // <- rc 2
+      float base = result_parallel[index]; 
 
       for (int j = 0; j < mult[index] - 1; j++)
       {
@@ -64,12 +64,12 @@ void parallel_mult(float *result_parallel, int *mult, int tid, int num_threads)
       for (int i = 0; i < 32; i++)
       {
         // dynamic work based on task
-        int index = index_array[i];
-        float base = result_parallel[index]; // rc 1
+        int index  = index_array[i];
+        float base = result_parallel[index];
 
         for (int j = 0; j < mult[index] - 1; j++)
         {
-          result_parallel[index] = result_parallel[index] + base; // rc 1 // rc 2
+          result_parallel[index] = result_parallel[index] + base; 
         }
       }
     }
