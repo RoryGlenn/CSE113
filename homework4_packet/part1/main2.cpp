@@ -10,33 +10,60 @@
 #else
 #error "no barrier specified!"
 #endif
+
 barrier_object B;
 
 
-int main(int argc, char *argv[]) {
+void repeated_blur(double *input, double *output, int size, int tid) 
+{
+  for (int i = 1; i < size - 1; i++) 
+  {
+    B.barrier(tid);
+    output[i] = (input[i] + input[i + 1] + input[i - 1]) / 3;
+    
+  }
+  // B.barrier(tid);
+}
+
+
+
+int main(int argc, char *argv[])
+{
   int num_threads = 8;
-  if (argc > 1) {
-    num_threads = atoi(argv[1]);
+  double *input  = new double[SIZE];
+  double *output = new double[SIZE];  
+  thread thread_array[num_threads];
+
+  if (argc > 1) { num_threads = atoi(argv[1]); }
+
+  for (int i = 0; i < SIZE; i++)
+  {
+    double randval = fRand(-100.0, 100.0);
+    input[i]  = randval;
+    output[i] = randval;
   }
 
-  double *input = new double[SIZE];
-  double *output = new double[SIZE];
-
-  for (int i = 0; i < SIZE; i++) {
-    double randval = fRand(-100.0, 100.0);
-    input[i] = randval;
-    output[i] = randval;    
-  } 
- 
   B.init(num_threads);
+
   auto time_start = std::chrono::high_resolution_clock::now();
 
   // Launch threads once
-  // Join threads once
-  auto time_end = std::chrono::high_resolution_clock::now();
-  auto time_duration = std::chrono::duration_cast<std::chrono::nanoseconds>(time_end - time_start);
-  double time_seconds = time_duration.count()/1000000000.0;
+  for (int i = 0; i < num_threads; i++) 
+  { 
+    thread_array[i] = thread(repeated_blur, input, output, SIZE, i);
+    // B.barrier(i);
+  }
 
+  // Join threads once
+  for (int i = 0; i < num_threads; i++) { thread_array[i].join(); }
+
+  auto   time_end       = std::chrono::high_resolution_clock::now();
+  auto   time_duration  = std::chrono::duration_cast<std::chrono::nanoseconds>(time_end - time_start);
+  double time_seconds   = time_duration.count() / 1000000000.0;
   std::cout << "timings: " << time_seconds << std::endl;
-      
+
+  delete[] input;
+  delete[] output;
+
+  return 0;  
 }
