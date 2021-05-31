@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+using namespace std;
 
 #if defined(SRBARRIER)
 #include "SRBarrier.h"
@@ -16,46 +17,49 @@ barrier_object B;
 
 void repeated_blur(double *input, double *output, int size, int tid) 
 {
+
+  B.barrier(tid);
+
   for (int i = 1; i < size - 1; i++) 
   {
-    B.barrier(tid);
     output[i] = (input[i] + input[i + 1] + input[i - 1]) / 3;
-    
   }
-  // B.barrier(tid);
+  
 }
 
 
 
 int main(int argc, char *argv[])
 {
-  int num_threads = 8;
-  double *input  = new double[SIZE];
-  double *output = new double[SIZE];  
-  thread thread_array[num_threads];
+  int     num_threads = 8;
+  double* input       = new double[SIZE];
+  double* output      = new double[SIZE];  
+  thread  thread_array[num_threads];
 
   if (argc > 1) { num_threads = atoi(argv[1]); }
 
   for (int i = 0; i < SIZE; i++)
   {
     double randval = fRand(-100.0, 100.0);
-    input[i]  = randval;
-    output[i] = randval;
+    input[i]       = randval;
+    output[i]      = randval;
   }
 
   B.init(num_threads);
 
-  auto time_start = std::chrono::high_resolution_clock::now();
+  auto time_start = chrono::high_resolution_clock::now();
 
   // Launch threads once
   for (int i = 0; i < num_threads; i++) 
   { 
-    thread_array[i] = thread(repeated_blur, input, output, SIZE, i);
-    // B.barrier(i);
+    int chunk_size  = SIZE / num_threads;
+    thread_array[i] = thread(repeated_blur, &input[i * chunk_size], &output[i * chunk_size], chunk_size, i);
   }
 
   // Join threads once
   for (int i = 0; i < num_threads; i++) { thread_array[i].join(); }
+  // for (int i = 0; i < SIZE; i++)
+  //   printf("output[%d]: %f\n", i, output[i]);
 
   auto   time_end       = std::chrono::high_resolution_clock::now();
   auto   time_duration  = std::chrono::duration_cast<std::chrono::nanoseconds>(time_end - time_start);
