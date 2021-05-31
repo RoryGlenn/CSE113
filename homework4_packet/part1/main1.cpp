@@ -18,7 +18,7 @@ void repeated_blur(double *input, double *output, int size)
 
 int main(int argc, char *argv[])
 {
-  int num_threads = 8;
+  int num_threads = 2;
 
   if (argc > 1)
   {
@@ -38,27 +38,26 @@ int main(int argc, char *argv[])
   auto time_start = std::chrono::high_resolution_clock::now();
   thread thread_array[num_threads];
 
-
   for (int r = 0; r < REPEATS; r++)
   {
+    // Launch threads to compute the blur
     for (int i = 0; i < num_threads; i++)
     {
-      // Launch threads to compute the blur
-      thread_array[i] = thread(repeated_blur, input, output, SIZE);
+      int chunk_size  = SIZE / num_threads;
+      thread_array[i] = thread(repeated_blur, &input[i * chunk_size], &output[i * chunk_size], chunk_size);
     }
-  }
 
-  for (int i = 0; i < num_threads; i++)
-  {
-    // join threads
-    thread_array[i].join();
-  }
+    for (int i = 0; i < num_threads; i++)
+    {
+      // join threads
+      thread_array[i].join();
+    }
 
     // Swap input and output pointers.
-  double *tmp = input;
-  input       = output;
-  output      = tmp;
-
+    double *tmp = input;
+    input       = output;
+    output      = tmp;
+  }
 
   auto   time_end       = std::chrono::high_resolution_clock::now();
   auto   time_duration  = std::chrono::duration_cast<std::chrono::nanoseconds>(time_end - time_start);
