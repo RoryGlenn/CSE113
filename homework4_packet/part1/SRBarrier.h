@@ -47,7 +47,6 @@ public:
 
     threadSense[tid] = !local_sense;
     // printf("threadSense[%d]: %d\n", tid, threadSense[tid]);
-
   }
 
 private:

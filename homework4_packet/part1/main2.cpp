@@ -14,6 +14,8 @@ using namespace std;
 
 barrier_object B;
 
+// implement an optimized variant of the sense reversing barrier of the 
+// previous section by adding relaxed peeking and yielding (similar to the mutexes).
 
 void repeated_blur(double *input, double *output, int size, int tid) 
 {
