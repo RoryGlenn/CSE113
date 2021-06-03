@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
 
   // Join threads once
   for (int i = 0; i < num_threads; i++) { thread_array[i].join(); }
-  // for (int i = 0; i < SIZE; i++)
-  //   printf("output[%d]: %f\n", i, output[i]);
 
   auto   time_end       = std::chrono::high_resolution_clock::now();
   auto   time_duration  = std::chrono::duration_cast<std::chrono::nanoseconds>(time_end - time_start);
