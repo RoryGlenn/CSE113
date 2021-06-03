@@ -16,6 +16,9 @@ void repeated_blur(double *input, double *output, int size)
 }
 
 
+// create two ref arrays both filled with the same values
+// then perform the repeated_blur on both
+
 int main(int argc, char *argv[])
 {
   int num_threads = 2;

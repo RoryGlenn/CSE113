@@ -4,12 +4,6 @@ using namespace std;
 
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
-// • also known as weak memory behaviors
-// • An execution that is NOT allowed by sequential consistency
-// • A memory model that allows relaxed memory executions is known as a relaxed memory mode
-
-
-// Add relaxed peeking and yielding (similar to the mutexes).
 
 class barrier_object
 {
@@ -28,7 +22,6 @@ public:
 
   void barrier(int tid)
   {
-
     bool local_sense  = threadSense[tid];
     int  position     = atomic_fetch_sub(&count, 1);
     
@@ -43,29 +36,14 @@ public:
       {
         this_thread::yield();
       }
+
+      // need a fence to synchronize and make sure no reordering happens
+      sense.load();
     }
 
     threadSense[tid] = !local_sense;
   }
 
-
-  // void lock(int thread_id)
-  // {
-  //   bool e       = false;
-  //   bool acquire = false;
-
-  //   while (!acquired)
-  //   {
-  //     while (flag.load(memory_order_relaxed) == true) 
-  //     {
-  //       /* spin */ 
-  //     };
-
-  //     e = false;
-  //     acquired = atomic_compare_exchange_strong(&flag, &e, true);
-  //   }
-
-  // }
 
 private:
   // Give me some private variables

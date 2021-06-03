@@ -24,29 +24,22 @@ public:
 
   void barrier(int tid)
   {
-    // printf("tid: %d\n", tid);
-    // printf("threadSense[%d]: %d\n", tid, threadSense[tid]);
-
     bool local_sense  = threadSense[tid];
     int  position     = atomic_fetch_sub(&count, 1);
-    // printf("position: %d\n", position);
+    
     if (position == 1)
     {
       count.store(size);
-      // printf("count.load(): %d\n", count.load());
       sense.store(local_sense);
-      // printf("sense.load(): %d\n", sense.load());
     }
     else
     {
       while (sense.load() != local_sense) 
       {
-        // printf("spinning\n");
       }
     }
 
     threadSense[tid] = !local_sense;
-    // printf("threadSense[%d]: %d\n", tid, threadSense[tid]);
   }
 
 private:

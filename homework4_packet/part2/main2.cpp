@@ -20,19 +20,23 @@ int var1 = 0;
 
 void t0_function()
 {
+  B.barrier(0);
+  
   // complete me!
   x.store(1, memory_order_relaxed);
-  B.barrier(0);
+  // B.barrier(0);
   var0 = y.load(memory_order_relaxed);
 }
 
 
 void t1_function()
 {
+  B.barrier(1);
+
   // complete me!
   y.store(1, memory_order_relaxed);
   var1 = x.load(memory_order_relaxed);
-  B.barrier(1);
+  // B.barrier(1);
 }
 
 int main()
