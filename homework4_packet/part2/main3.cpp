@@ -4,8 +4,8 @@
 #include "SRBarrier.h"
 using namespace std;
 
-#define TEST_ITERATIONS (1024 * 256)
-// #define TEST_ITERATIONS 1024
+// #define TEST_ITERATIONS (1024 * 256)
+#define TEST_ITERATIONS 1024
 
 
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
@@ -14,12 +14,14 @@ barrier_object B;
 atomic_int x(0);
 atomic_int y(0);
 
-
 int var0 = 0;
 int var1 = 0;
 
 void t0_function()
 {
+
+  // B.barrier(0);
+
   // complete me!
   x.store(1, memory_order_seq_cst);
   B.barrier(0);
@@ -29,6 +31,8 @@ void t0_function()
 
 void t1_function()
 {
+  // B.barrier(1);
+
   // complete me!
   y.store(1, memory_order_seq_cst);
   var1 = x.load(memory_order_seq_cst);
@@ -46,6 +50,7 @@ int main()
 
   for (int i = 0; i < TEST_ITERATIONS; i++)
   {
+
     // Run a test iteration
     x.store(0);
     y.store(0);
