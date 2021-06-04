@@ -15,6 +15,7 @@
 #endif
 
 dekkers_mutex m;
+
 int critical_section_total = 0;
 std::atomic_int real_total(0);
 std::atomic_bool finished(false);
@@ -43,7 +44,6 @@ void t1()
 
 int main()
 {
-
   std::thread t0_thread = std::thread(t0);
   std::thread t1_thread = std::thread(t1);
 
@@ -52,7 +52,7 @@ int main()
   t0_thread.join();
   t1_thread.join();
 
-  std::cout << "throughput (critical sections per second): " << real_total / 2.0 << endl;
+  std::cout << "throughput (critical sections per second): " << real_total / 2.0 << std::endl;
   std::cout << "number of critical sections: " << real_total << std::endl;
   std::cout << "number of mutual exclusion violations: " << real_total - critical_section_total << std::endl;
   std::cout << "percent of times that mutual exclusion was violated: " << 100.0 * (float(real_total - critical_section_total) / float(real_total)) << "%" << std::endl;

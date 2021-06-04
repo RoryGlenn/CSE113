@@ -5,21 +5,27 @@
 
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
-
-class dekkers_mutex {
+class dekkers_mutex
+{
 public:
-  dekkers_mutex() {
+  dekkers_mutex()
+  {  
     // implement me!
+
   }
 
-  void lock(int tid) {
+  void lock(int tid)
+  {
     // implement me!
+
   }
 
-  void unlock(int tid) {
+  void unlock(int tid)
+  {
     // implement me!
+    
   }
 
 private:
-  // Give me some private variables  
+  // Give me some private variables
 };

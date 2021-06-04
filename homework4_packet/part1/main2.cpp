@@ -56,6 +56,12 @@ int main(int argc, char *argv[])
   { 
     int chunk_size  = SIZE / num_threads;
     thread_array[i] = thread(repeated_blur, &input[i * chunk_size], &output[i * chunk_size], chunk_size, i);
+
+    // Swap input and output pointers.
+    double *tmp = input;
+    input       = output;
+    output      = tmp;
+
   }
 
   // Join threads once

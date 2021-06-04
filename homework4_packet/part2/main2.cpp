@@ -4,8 +4,7 @@
 #include "SRBarrier.h"
 using namespace std;
 
-// #define TEST_ITERATIONS (1024 * 256)
-#define TEST_ITERATIONS 1024
+#define TEST_ITERATIONS (1024 * 256)
 
 
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
@@ -20,23 +19,19 @@ int var1 = 0;
 
 void t0_function()
 {
-  B.barrier(0);
-  
   // complete me!
+  B.barrier(0);
   x.store(1, memory_order_relaxed);
-  // B.barrier(0);
   var0 = y.load(memory_order_relaxed);
 }
 
 
 void t1_function()
 {
-  B.barrier(1);
-
   // complete me!
+  B.barrier(1);
   y.store(1, memory_order_relaxed);
   var1 = x.load(memory_order_relaxed);
-  // B.barrier(1);
 }
 
 int main()

@@ -6,7 +6,6 @@ using namespace std;
 
 // docker run -v ${pwd}:/assignments -it --rm reeselevine/cse113:latest
 
-
 #define TEST_ITERATIONS (1024 * 256)
 
 
@@ -35,7 +34,6 @@ void t1_function()
 
 int main()
 {
-
   int output0 = 0;
   int output1 = 0;
   int output2 = 0;
