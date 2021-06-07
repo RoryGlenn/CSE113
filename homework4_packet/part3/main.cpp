@@ -17,7 +17,7 @@
 dekkers_mutex m;
 
 int critical_section_total = 0;
-std::atomic_int real_total(0);
+std::atomic_int  real_total(0);
 std::atomic_bool finished(false);
 
 void t0()

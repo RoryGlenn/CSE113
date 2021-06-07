@@ -34,11 +34,14 @@ void repeated_blur(double *input, double *output, int size, int tid)
 int main(int argc, char *argv[])
 {
   int     num_threads = 8;
+
+
+  if (argc > 1) { num_threads = atoi(argv[1]); }
+  
   double* input       = new double[SIZE];
   double* output      = new double[SIZE];  
   thread  thread_array[num_threads];
 
-  if (argc > 1) { num_threads = atoi(argv[1]); }
 
   for (int i = 0; i < SIZE; i++)
   {
@@ -48,7 +51,6 @@ int main(int argc, char *argv[])
   }
 
   B.init(num_threads);
-
   auto time_start = chrono::high_resolution_clock::now();
 
   // Launch threads once
@@ -61,7 +63,6 @@ int main(int argc, char *argv[])
     double *tmp = input;
     input       = output;
     output      = tmp;
-
   }
 
   // Join threads once

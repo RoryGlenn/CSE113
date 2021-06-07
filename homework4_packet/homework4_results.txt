@@ -1,0 +1,75 @@
+Part 1
+    For each approach, time with the following number of threads: 1, cores, cores × 2. That
+    is one thread, as many threads as you have cores, and 16 times as many threads as you have cores.
+    Record your timing experiments.
+
+
+1 thread results:
+    sjbarrier timings: 1.60733
+    srbarrier timings: 0.0002431
+    srobarrier timings: 0.0002434
+
+8 threads results:
+    sjbarrier  timings: 1.33658
+    srbarrier  timings: 0.0008128
+    srobarrier timings: 0.0004315
+
+16 threads result:
+    sjbarrier timings: 3.85819
+    srbarrier timings: 0.0008264
+    srobarrier timings: 0.0007648
+
+
+######################################################    
+Part 2
+
+relaxed_sb:
+    output0:  1
+    output1:  4437
+    output2:  257704
+    output3:  2
+
+    relaxed behavior frequency: 7.62939e-06
+
+
+sync_sb:  
+    output0: 0
+    output1: 177637
+    output2: 10727
+    output3: 73780
+
+    relaxed behavior frequency: 0.281448
+
+
+sc_sb:
+    output0: 183386
+    output1: 72953
+    output2: 5805
+    output3: 0
+
+    relaxed behavior frequency: 0
+
+
+######################################################    
+Part 3
+    For each one, record the mutual
+    exclusion violations, and the throughput
+
+
+scdekker:
+    throughput (critical sections per second): 9.71574e+06
+    number of critical sections: 19431471
+    number of mutual exclusion violations: 0
+    percent of times that mutual exclusion was violated: 0%
+
+rdekkers:
+    throughput (critical sections per second): 1.6689e+07
+    number of critical sections: 33377958
+    number of mutual exclusion violations: 2852383
+    percent of times that mutual exclusion was violated: 8.54571%
+
+tsodekkers:
+    throughput (critical sections per second): 1.5186e+07
+    number of critical sections: 30371927
+    number of mutual exclusion violations: 0
+    percent of times that mutual exclusion was violated: 0%
