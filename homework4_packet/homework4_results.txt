@@ -1,8 +1,4 @@
 Part 1
-    For each approach, time with the following number of threads: 1, cores, cores × 2. That
-    is one thread, as many threads as you have cores, and 16 times as many threads as you have cores.
-    Record your timing experiments.
-
 
 1 thread results:
     sjbarrier timings: 1.60733
@@ -52,8 +48,6 @@ sc_sb:
 
 ######################################################    
 Part 3
-    For each one, record the mutual
-    exclusion violations, and the throughput
 
 
 scdekker:
